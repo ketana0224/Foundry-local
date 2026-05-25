@@ -77,6 +77,22 @@ foundry service start
 
 どちらが表示されても OK です。**表示されたエンドポイント URL のポート番号を控えておきます**（後続 lab で `http://127.0.0.1:<port>/v1` を OpenAI 互換 base URL として使用します）。ポート番号は新規起動の度に変わるため、毎セッション確認してください。
 
+サービスの状態確認:
+
+```powershell
+foundry service status
+```
+
+出力（例）:
+
+```
+🟢 Model management service is running on http://127.0.0.1:51296/openai/status
+EP autoregistration status: Successfully downloaded and registered the following EPs: NvTensorRTRTXExecutionProvider, OpenVINOExecutionProvider, CUDAExecutionProvider.
+Valid EPs: CPUExecutionProvider, WebGpuExecutionProvider, NvTensorRTRTXExecutionProvider, OpenVINOExecutionProvider, CUDAExecutionProvider
+```
+
+`Valid EPs:` 行に列挙された実行プロバイダー（CPU / WebGPU / CUDA / OpenVINO / NvTensorRT 等）が、このマシンでモデル推論に使える EP の一覧です（Step 5 で活用します）。
+
 確実にリセットしたい場合（ポートを変えたい / プロセスを掃除したい）:
 
 ```powershell
