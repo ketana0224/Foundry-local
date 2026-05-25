@@ -133,7 +133,68 @@ await model.LoadAsync();
 
 (Python / JavaScript SDK でも `modelCacheDir` / `model_cache_dir` で同じことが可能。)
 
-## 7. よくあるハマりどころ
+## 7. Microsoft Foundry で fine-tune したモデルを取り込む
+
+Foundry / Azure 系の fine-tuning には複数の経路があり、**重みをローカルにダウンロードできるかどうか** で Foundry Local への取り込み可否が決まります。
+
+| FT の出所 | 重み DL | Foundry Local 実行 | 取り込み手順 |
+| --- | --- | --- | --- |
+| **Azure OpenAI Fine-tuning**（GPT-4o/4/3.5 等） | ❌ | ❌ | MS ホストのみ。Azure 上の Deployment Endpoint を REST/SDK 経由で叩く形になる |
+| **Azure AI Foundry の OSS FT**（Phi/Llama/Mistral サーバーレス FT） | ⭕ HF 形式 | ⭕ | ① Registry/Job 成果物を DL ② Olive で ONNX 化 ③ §3〜§5 と同じ |
+| **Foundry Toolkit (VS Code) のローカル FT** | ⭕ ローカル | ⭕ | ① 出力フォルダをそのまま Olive にかける ② §3〜§5 と同じ |
+| **LoRA アダプタのみ** | ⭕ adapter | ⭕ | ① `peft` 等でベースモデルにマージ ② Olive ③ §3〜§5 と同じ |
+
+### 7.1 OSS FT の成果物をダウンロード
+
+Azure AI Foundry ポータルの **Models + endpoints → 該当 FT モデル → Artifacts** から取得するか、Azure ML CLI で取得:
+
+```powershell
+# 例: Azure ML registry / project に保存された FT モデルをローカルへ
+az ml model download --name <ft-model-name> --version <v> `
+  --download-path .\ft-model `
+  --workspace-name <ws> --resource-group <rg>
+```
+
+`.\ft-model` 配下に `config.json` / `*.safetensors` / `tokenizer.*` が揃っていれば OK。
+
+### 7.2 LoRA をベースモデルへマージ
+
+LoRA アダプタ単体は Foundry Local / Olive では扱えないので、ベース重みとマージしてから変換します。
+
+```python
+# merge_lora.py
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+base_id    = "meta-llama/Llama-3.2-1B-Instruct"
+adapter_id = ".\\ft-adapter"
+
+base = AutoModelForCausalLM.from_pretrained(base_id, torch_dtype="auto")
+tok  = AutoTokenizer.from_pretrained(base_id)
+merged = PeftModel.from_pretrained(base, adapter_id).merge_and_unload()
+
+merged.save_pretrained(".\\merged-model")
+tok.save_pretrained(".\\merged-model")
+```
+
+### 7.3 Olive にかけて Foundry Local 化
+
+ローカルパスを `--model_name_or_path` に渡すだけで §3 と同じフローに合流します。
+
+```bash
+olive optimize `
+  --model_name_or_path .\merged-model `
+  --output_path models\my-ft-model `
+  --device gpu `
+  --provider CUDAExecutionProvider `
+  --precision int4
+```
+
+あとは `inference_model.json` を生成（§4）→ `foundry cache cd`（§5）→ `foundry model run my-ft-model` で完了。
+
+> ⚠️ **Azure OpenAI FT を Foundry Local で動かしたい**という要望は現状実現不可です。アーキテクチャ上、重みが Microsoft 側でホストされ取り出せないためです。オフラインで FT モデルを使いたい場合は、最初から OSS モデル + Foundry Toolkit / Azure AI Foundry の OSS FT 経路を選択してください。
+
+## 8. よくあるハマりどころ
 
 | 症状 | 原因 | 対策 |
 | --- | --- | --- |
