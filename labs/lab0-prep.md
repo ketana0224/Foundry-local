@@ -42,6 +42,21 @@ $env:Path = "$env:LOCALAPPDATA\Microsoft\WindowsApps;$env:Path"
 foundry --version   # 0.8.119 等が返れば OK
 ```
 
+**恒久対応**: 上記は現在のセッション限定です。新しいターミナルでも有効にするには、ユーザー PATH に追加します（`setx` は既存 PATH を 1024 文字で切り詰めるリスクがあるため `[Environment]::SetEnvironmentVariable` を使用）:
+
+```powershell
+$add = "$env:LOCALAPPDATA\Microsoft\WindowsApps"
+$old = [Environment]::GetEnvironmentVariable('Path', 'User')
+if (-not (($old -split ';') -contains $add)) {
+    [Environment]::SetEnvironmentVariable('Path', "$add;$old", 'User')
+    Write-Host "Added to User PATH." -ForegroundColor Yellow
+} else {
+    Write-Host "Already present."
+}
+```
+
+設定後は **Windows Terminal / VS Code を完全に終了して開き直す** こと（タブを閉じるだけでは親プロセスが古い PATH をキャッシュしたままなので反映されません）。それでも反映されない場合は一度サインアウト → サインインしてください。
+
 ## 0.3 サービスの起動確認
 
 ```powershell
