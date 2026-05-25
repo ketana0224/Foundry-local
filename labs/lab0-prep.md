@@ -143,6 +143,10 @@ foundry model run qwen2.5-0.5b
 
 初回はモデル本体（数百 MB）のダウンロードが入ります。プロンプトが出たら `Hello!` を送って応答が返れば OK。`/exit` で終了。
 
+> 💡 `foundry model run` / `foundry cache list` 実行時に  
+> `[ERR] Failed to process model #0 on page N.`  
+> という赤文字エラーが複数行出ることがありますが **無視して構いません**。これは Foundry のリモートカタログ API をページ送りで取得する際、CLI 側パーサがまだ知らない新しいスキーマのモデルエントリをスキップしているだけのノイズ警告で、機能には影響しません（Fresh Install でも発生）。気になる場合は `winget upgrade --id Microsoft.FoundryLocal` で最新クライアントに更新してください。
+
 ロード済みモデルとサービスを停止する場合:
 
 ```powershell
