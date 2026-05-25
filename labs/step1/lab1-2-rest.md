@@ -37,10 +37,23 @@ foundry model run qwen2.5-0.5b      # Lab 0 で DL 済み。品質重視なら p
 
 ```powershell
 (Invoke-RestMethod "$ENDPOINT/v1/models").data | Format-Table id, owned_by, maxInputTokens
+```
 
-# /v1/models の先頭をそのまま使うなら：
-$MODEL = (Invoke-RestMethod "$ENDPOINT/v1/models").data[0].id
+複数モデルが同時にロードされている場合があるので、**使いたいベース名で 1 件に絞ります**。Lab 0 で DL 済みの軽量モデルを使う例:
+
+```powershell
+$MODEL = ((Invoke-RestMethod "$ENDPOINT/v1/models").data |
+          Where-Object { $_.id -like "qwen2.5-0.5b*" }).id |
+         Select-Object -First 1
 "Using model: $MODEL"
+```
+
+品質を上げたい場合は `phi-4-mini` に切り替え:
+
+```powershell
+$MODEL = ((Invoke-RestMethod "$ENDPOINT/v1/models").data |
+          Where-Object { $_.id -like "Phi-4-mini*" }).id |
+         Select-Object -First 1
 ```
 
 出力例（マシンによって EP 部分が変わる）:
