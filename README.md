@@ -23,7 +23,7 @@ Microsoft Foundry Local の検証・ハンズオンコンテンツです。
 
 主な特徴:
 
-- **ハードウェア最適化**: 同一モデルに対し EP (Execution Provider) 別の ONNX バリアント（CPU / CUDA / TensorRT-RTX / OpenVINO / WebGPU / QNN 等）を Foundry カタログから自動取得（詳細 → [docs/execution-providers.md](docs/execution-providers.md)）
+- **ハードウェア最適化**: 同一モデルに対し EP (Execution Provider) 別の ONNX バリアント（CPU / CUDA / TensorRT-RTX / OpenVINO / WebGPU / QNN 等の最適化版）を Foundry カタログから自動取得（詳細 → [docs/execution-providers.md](docs/execution-providers.md)）
 - **OpenAI 互換 REST**: `http://127.0.0.1:<port>/v1/chat/completions` 等の OAI 互換エンドポイントをローカルに立てる
 - **CLI / SDK 両対応**: `foundry` CLI に加え Python / .NET / JavaScript / Rust SDK を提供
 - **オフライン動作**: 初回 DL 以降はネット不要。キャッシュは `foundry cache cd` で任意フォルダに切替可能
