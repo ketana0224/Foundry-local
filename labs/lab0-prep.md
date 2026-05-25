@@ -33,7 +33,54 @@ foundry --version
 foundry --help
 ```
 
-`foundry` が見つからない場合は PATH が反映されていないため、新しい PowerShell ウィンドウを開き直してください。
+### `foundry` コマンドが見つからない場合
+
+新しい PowerShell ウィンドウを開き直しても `foundry : 用語 ... は、コマンドレット ... の名前として認識されません` と出る場合、**`%LOCALAPPDATA%\Microsoft\WindowsApps` がユーザー PATH から欠落している** ことが原因です。  
+Foundry Local を含む MSIX/Store 系 CLI（`winget`, Store 版 Python など）はすべてこのフォルダ配下の App Execution Alias 経由でしか PATH に乗らないため、ここが消えていると一切解決できません。
+
+切り分け:
+
+```powershell
+# 1. 本体は存在するか (バージョンが返れば本体は正常)
+& "$env:LOCALAPPDATA\Microsoft\WindowsApps\foundry.exe" --version
+
+# 2. PATH に WindowsApps が含まれているか
+$env:Path -split ';' | Select-String 'WindowsApps'
+# → 何も返らなければ PATH に存在しない = 原因確定
+```
+
+対処 (推奨): ユーザー PATH に追加して MSIX 系コマンドをまとめて復旧します。
+
+```powershell
+# 現在のユーザー PATH を取得
+$old = [Environment]::GetEnvironmentVariable('Path', 'User')
+
+# 既に含まれていなければ先頭に追加
+$add = "$env:LOCALAPPDATA\Microsoft\WindowsApps"
+if (-not (($old -split ';') -contains $add)) {
+    [Environment]::SetEnvironmentVariable('Path', "$add;$old", 'User')
+    Write-Host "Added to User PATH. Open a NEW terminal to apply." -ForegroundColor Yellow
+} else {
+    Write-Host "Already present."
+}
+```
+
+> ※ 上記は **ユーザー環境変数** を直接書き換えます。`setx` を使うと既存 PATH が 1024 文字で切り捨てられることがあるため、`[Environment]::SetEnvironmentVariable` を使用しています。
+
+設定後は **新しい PowerShell ウィンドウ** を開いてから `foundry --version` を再実行してください。
+
+フォールバック（PATH 変更が組織ポリシーで禁止されているとき）:
+
+```powershell
+# PowerShell プロファイルに foundry のみのエイリアスを追加
+$alias = 'Set-Alias foundry "$env:LOCALAPPDATA\Microsoft\WindowsApps\foundry.exe"'
+if (-not (Test-Path $PROFILE)) { New-Item -ItemType File -Path $PROFILE -Force | Out-Null }
+Add-Content -Path $PROFILE -Value $alias
+. $PROFILE
+foundry --version
+```
+
+> ⚠ MSIX 実体パス（`C:\Program Files\WindowsApps\Microsoft.FoundryLocal_<version>_x64__...`）を直接 PATH に追加する方法は、`winget upgrade` のたびにバージョン番号が変わって PATH が壊れるため **非推奨** です。
 
 ## 0.3 サービスの起動確認
 
