@@ -63,21 +63,13 @@ if (-not (($old -split ';') -contains $add)) {
 foundry service start
 ```
 
-新規起動時の出力（例）:
-
-```
-🟢 Service is Started on http://127.0.0.1:59207/, PID 30340!
-🟢 Model management service is running on http://127.0.0.1:59207/openai/status
-EP autoregistration status: Attempt 1: Autoregistration of certified execution providers in progress.
-```
-
-既に起動済みの場合の出力（例）:
+出力（例）:
 
 ```
 🟢 Service is already running on http://127.0.0.1:59207/.
 ```
 
-どちらが出ても OK です（前者は初回・サービス停止後、後者は 2 回目以降の `start`）。
+Foundry Local は MSIX としてインストールされ、サービスが常駐するため、`winget install` 直後でも 2 回目以降でも上記の `already running` 形式で表示されます（`http://127.0.0.1:<port>/` の部分は環境ごとに変わります）。
 
 起動状態の確認:
 
