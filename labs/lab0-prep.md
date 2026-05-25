@@ -59,8 +59,6 @@ if (-not (($old -split ';') -contains $add)) {
 
 ## 0.3 サービスの起動
 
-`winget install` 直後はサービスが起動していないため、明示的に起動します（`status` を先に叩いても自動起動はしません）。
-
 ```powershell
 foundry service start
 ```
