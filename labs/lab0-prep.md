@@ -147,6 +147,8 @@ foundry model run qwen2.5-0.5b
 
 初回はモデル本体（数百 MB）のダウンロードが入ります。プロンプトが出たら `Hello!` を送って応答が返れば OK。`/exit` で終了。
 
+> 💡 `qwen2.5-0.5b` のように **Foundry カタログに登録済みのモデル ID** を指定した場合は自動でクラウドからダウンロードされます。**Hugging Face や自前 PyTorch モデルを動かしたい場合** は Olive で ONNX 変換 → `inference_model.json` を付与 → `foundry cache cd` でキャッシュ登録の流れになります。詳細は [自作モデル(BYOM)を Foundry Local で動かす](../docs/bring-your-own-model.md) を参照してください。
+
 キャッシュ管理コマンド:
 
 ```powershell
