@@ -1,7 +1,6 @@
 # Foundry-local
 
-Microsoft Foundry Local の検証・ハンズオンコンテンツです。  
-全体計画は [spec.md](spec.md)、各ラボは [labs/README.md](labs/README.md) を参照してください。
+Microsoft Foundry Local の検証・ハンズオンコンテンツです。
 
 ## ハンズオン構成
 
@@ -13,6 +12,8 @@ Microsoft Foundry Local の検証・ハンズオンコンテンツです。
 | Step 3 | Semantic Kernel・LangChain・RAG | [labs/step3/](labs/step3/) |
 | Step 4 | Microsoft Foundry (クラウド) との比較・フォールバック | [labs/step4/](labs/step4/) |
 | Step 5 | Execution Provider 性能・モデル運用 | [labs/step5/](labs/step5/) |
+
+各ラボは [labs/README.md](labs/README.md) を参照してください。
 
 ## Foundry Local とは
 
