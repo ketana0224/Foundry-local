@@ -83,9 +83,7 @@ foundry service start
 foundry service status
 ```
 
-🟢 表示が出れば確かに起動済みですが、Foundry Local 0.8.119 では **実際にはサービスが別ポートで動いているのに 🔴 `Model management service is not running!` と表示される** ことがあります（status と start で内部の検知ロジックが異なり、過去セッションで起動したサービスを status が見落とすため）。
-
-そのため、**サービスの真偽判定は `foundry service start` の出力で行うのが確実** です:
+サービスの真偽判定は `foundry service start` の出力で行うのが確実です:
 
 - `Service is Started on ... PID ...!` → 今この瞬間に新規起動した
 - `Service is already running on ...` → 既に動いている
