@@ -3,6 +3,17 @@
 Microsoft Foundry Local の検証・ハンズオンコンテンツです。  
 全体計画は [spec.md](spec.md)、各ラボは [labs/README.md](labs/README.md) を参照してください。
 
+## ハンズオン構成
+
+| Step | 概要 | リンク |
+| --- | --- | --- |
+| Lab 0 | 環境セットアップ（CLI / ランタイム） | [labs/lab0-prep.md](labs/lab0-prep.md) |
+| Step 1 | CLI と OpenAI 互換 REST API | [labs/step1/](labs/step1/) |
+| Step 2 | Python / .NET / JavaScript SDK | [labs/step2/](labs/step2/) |
+| Step 3 | Semantic Kernel・LangChain・RAG | [labs/step3/](labs/step3/) |
+| Step 4 | Microsoft Foundry (クラウド) との比較・フォールバック | [labs/step4/](labs/step4/) |
+| Step 5 | Execution Provider 性能・モデル運用 | [labs/step5/](labs/step5/) |
+
 ## Foundry Local とは
 
 ### 1. 概要（前提）
@@ -73,17 +84,6 @@ olive optimize \
 | Foundry の Managed Compute（自前 GPU）にデプロイした OSS FT モデル | ⭕ ベースが OSS なら重みを取得 → Olive 経由でローカルへ |
 
 つまり「Foundry で作った FT モデル」と一口に言っても、**ベースが OSS かクローズドか** で Foundry Local 行きの可否が決まります。
-
-## ハンズオン構成
-
-| Step | 概要 | リンク |
-| --- | --- | --- |
-| Lab 0 | 環境セットアップ（CLI / ランタイム） | [labs/lab0-prep.md](labs/lab0-prep.md) |
-| Step 1 | CLI と OpenAI 互換 REST API | [labs/step1/](labs/step1/) |
-| Step 2 | Python / .NET / JavaScript SDK | [labs/step2/](labs/step2/) |
-| Step 3 | Semantic Kernel・LangChain・RAG | [labs/step3/](labs/step3/) |
-| Step 4 | Microsoft Foundry (クラウド) との比較・フォールバック | [labs/step4/](labs/step4/) |
-| Step 5 | Execution Provider 性能・モデル運用 | [labs/step5/](labs/step5/) |
 
 ## License
 
