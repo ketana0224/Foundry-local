@@ -71,7 +71,7 @@ $body = @{
   model    = $MODEL
   messages = @(
     @{ role = "system"; content = "あなたは簡潔に答える日本語アシスタントです。" },
-    @{ role = "user";   content = "Foundry Local とは何ですか？1 文で説明してください。" }
+    @{ role = "user";   content = "Microsoft Foundry Local とは何ですか？1 文で説明してください。" }
   )
   temperature = 0.2
   max_tokens  = 200
@@ -107,6 +107,30 @@ curl -N -X POST "$ENDPOINT/v1/chat/completions" `
 ```
 
 `data: {...}` の連続行と最後に `data: [DONE]` が出れば成功。
+
+> 💡 SSE のペイロード内では日本語が `\u3067\u3059` のような **JSON Unicode エスケープ** で返ります（OpenAI 互換 API の仕様通りで、文字化けではありません）。ターミナルで自然な日本語として読みたい場合は、`curl` 出力を PowerShell でパースしながら表示します:
+
+```powershell
+# 文字化け対策：コンソール出力を UTF-8 にしておく（このセッション中だけ有効）
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+curl -N -s -X POST "$ENDPOINT/v1/chat/completions" `
+  -H "Content-Type: application/json" `
+  --data-binary "@body.json" |
+  ForEach-Object {
+    if ($_ -match '^data:\s*(\{.*\})\s*$') {
+      $chunk = $matches[1] | ConvertFrom-Json
+      Write-Host -NoNewline $chunk.choices[0].delta.content
+    }
+  }
+Write-Host ""   # 末尾改行
+```
+
+実行例:
+
+```
+四国は4つの県で構成されています。徳島県、香川県、愛媛県、高知県です。
+```
 
 ## 1.2.4 VS Code REST Client 用ファイル（任意）
 
