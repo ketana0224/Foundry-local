@@ -170,4 +170,4 @@ node app.js
 - [ ] 同じくストリーミング応答が逐次出力される
 - [ ] Python 版（Lab 2.1）と同じモデル ID が使われている
 
-次へ → [Lab 3.1: Semantic Kernel / LangChain 連携](../step3/lab3-1-sk-langchain.md)
+次へ → [Lab 3.1: Microsoft Agent Framework / LangChain 連携](../step3/lab3-1-sk-langchain.md)
