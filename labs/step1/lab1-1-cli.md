@@ -37,7 +37,7 @@ foundry model list --filter task=chat-completion
 
 ### Model ID の読み方
 
-`foundry model info` / `foundry model list` の出力に出る **Model ID** は、Foundry カタログ上で 1 つのバリアントを一意に識別する完全名です。例えば `Phi-4-mini-instruct-cuda-gpu:5` は次のように分解できます。
+**Model ID** は、Foundry カタログ上で 1 つのバリアントを一意に識別する完全名です。例えば `Phi-4-mini-instruct-cuda-gpu:5` は次のように分解できます。
 
 | 部分 | 例 | 意味 |
 | --- | --- | --- |
