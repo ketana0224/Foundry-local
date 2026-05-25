@@ -21,16 +21,19 @@ Foundry Local service is running.
 Endpoint: http://localhost:5273
 ```
 
-> ポート番号はサービス起動ごとに変わるため、必ず実行時に確認します。以後 `$ENDPOINT` を環境変数として使います。
+> ポート番号はサービス起動ごとに変わるため、必ず実行時に確認します。以後 `$ENDPOINT` と `$MODEL` を変数として使います。
 
 ```powershell
 $ENDPOINT = "http://localhost:5273"   # 自分の出力に置き換える
+$MODEL    = "qwen2.5-0.5b"            # Lab 0 で DL 済み（軽量・即起動）。`phi-4-mini` 等に差し替え可
 ```
+
+> 💡 `phi-4-mini` は GPU 版でも数 GB あり初回 DL に時間がかかります。動作確認だけなら Lab 0 でダウンロード済みの **`qwen2.5-0.5b` を使うのがおすすめ**。応答品質を比べたくなったら `$MODEL = "phi-4-mini"` に切り替えて同じスクリプトを再実行できます。
 
 モデルが起動していなければ、別ターミナルで:
 
 ```powershell
-foundry model run phi-4-mini
+foundry model run $MODEL
 ```
 
 利用可能モデル名（リクエストに渡す `model` の値）:
@@ -43,7 +46,7 @@ curl "$ENDPOINT/v1/models"
 
 ```powershell
 $body = @{
-  model    = "phi-4-mini"
+  model    = $MODEL
   messages = @(
     @{ role = "system"; content = "あなたは簡潔に答える日本語アシスタントです。" },
     @{ role = "user";   content = "Foundry Local とは何ですか？1 文で説明してください。" }
@@ -66,7 +69,7 @@ Invoke-RestMethod -Uri "$ENDPOINT/v1/chat/completions" `
 ```powershell
 $json = @"
 {
-  "model": "phi-4-mini",
+  "model": "$MODEL",
   "stream": true,
   "messages": [
     {"role":"user","content":"四国の県を順に説明してください。"}
@@ -89,7 +92,8 @@ curl -N -X POST "$ENDPOINT/v1/chat/completions" `
 
 ```http
 @endpoint = http://localhost:5273
-@model = phi-4-mini
+@model = qwen2.5-0.5b
+# 応答品質を上げたい場合は phi-4-mini などに変更（初回 DL あり）
 
 ### List models
 GET {{endpoint}}/v1/models
