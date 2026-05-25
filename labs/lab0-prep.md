@@ -77,18 +77,6 @@ foundry service start
 
 どちらが表示されても OK です。**表示されたエンドポイント URL のポート番号を控えておきます**（後続 lab で `http://127.0.0.1:<port>/v1` を OpenAI 互換 base URL として使用します）。ポート番号は新規起動の度に変わるため、毎セッション確認してください。
 
-### `foundry service status` の挙動に関する注意
-
-```powershell
-foundry service status
-```
-
-サービスの真偽判定は `foundry service start` の出力で行うのが確実です:
-
-- `Service is Started on ... PID ...!` → 今この瞬間に新規起動した
-- `Service is already running on ...` → 既に動いている
-- いずれも `🟢` であれば後続 lab に進める
-
 確実にリセットしたい場合（ポートを変えたい / プロセスを掃除したい）:
 
 ```powershell
