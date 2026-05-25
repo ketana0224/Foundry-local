@@ -2,8 +2,6 @@
 
 Microsoft Foundry Local（ローカル AI 推論ランタイム）の検証・ハンズオンコンテンツ。
 
-> 全体計画は [`../spec.md`](../spec.md) を参照。
-
 ## 構成
 
 | # | タイトル | ファイル | 想定時間 | Azure |
