@@ -63,16 +63,37 @@ if (-not (($old -split ';') -contains $add)) {
 foundry service status
 ```
 
-期待出力（例）:
+サービスが未起動だと以下のように表示されます:
 
 ```
-Foundry Local service is running.
-Endpoint: http://localhost:5273
+🔴 Model management service is not running!
+To start the service, run the following command: foundry service start
 ```
 
-エンドポイントのポート番号は起動ごとに変わる可能性があります（後続 lab で都度参照）。
+その場合は明示的に起動します:
 
-エラー（`Request to local service failed` 等）が出た場合:
+```powershell
+foundry service start
+foundry service status
+```
+
+起動成功時の出力（例）:
+
+```
+🟢 Service is Started on http://127.0.0.1:59207/, PID 30340!
+🟢 Model management service is running on http://127.0.0.1:59207/openai/status
+EP autoregistration status: Attempt 1: Autoregistration of certified execution providers in progress.
+```
+
+ポイント:
+
+- **エンドポイント URL とポート番号は起動毎に変わります**（`127.0.0.1:59207` の部分）。後続 lab で URL が必要になったら都度 `foundry service status` で確認してください。
+- OpenAI 互換 API の base URL はこのエンドポイントに `/v1` を付けたもの（例: `http://127.0.0.1:59207/v1`）です。
+- 初回起動時は **EP（Execution Provider）autoregistration** が走り、CPU / DirectML / CUDA など利用可能な実行プロバイダーが自動登録されます。完了まで数十秒〜数分かかる場合があります。
+
+> ⚠ `foundry service status` を最初に叩いただけでサービスが自動起動するわけではありません。**必ず一度 `foundry service start` を実行** してから次節に進んでください。
+
+異常時のリカバリ:
 
 ```powershell
 foundry service restart
@@ -120,12 +141,21 @@ winget install --id Git.Git -e
 foundry model run qwen2.5-0.5b
 ```
 
-プロンプト `Hello!` を送って応答が返れば OK。`/exit` で終了。
+初回はモデル本体（数百 MB）のダウンロードが入ります。プロンプトが出たら `Hello!` を送って応答が返れば OK。`/exit` で終了。
+
+ロード済みモデルとサービスを停止する場合:
+
+```powershell
+foundry cache list           # ローカルキャッシュ確認
+foundry service stop         # サービス停止（モデルもアンロード）
+```
 
 ## チェックリスト
 
 - [ ] `foundry --version` がバージョンを返す
-- [ ] `foundry service status` が `running` を返す
+- [ ] `foundry service start` でサービスが起動した（🟢 Service is Started）
+- [ ] `foundry service status` で `running` が表示される
+- [ ] エンドポイント URL（`http://127.0.0.1:<port>/`）を 1 回控えた
 - [ ] Python / Node.js / .NET / Git が必要バージョンを満たす
 - [ ] `qwen2.5-0.5b` で最低 1 ターン会話できた
 
