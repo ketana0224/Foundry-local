@@ -35,6 +35,31 @@ foundry model list --filter device=GPU
 foundry model list --filter task=chat-completion
 ```
 
+### Model ID の読み方
+
+`foundry model info` / `foundry model list` の出力に出る **Model ID** は、Foundry カタログ上で 1 つのバリアントを一意に識別する完全名です。例えば `Phi-4-mini-instruct-cuda-gpu:5` は次のように分解できます。
+
+| 部分 | 例 | 意味 |
+| --- | --- | --- |
+| ベースモデル名 | `Phi-4-mini-instruct` | モデルファミリ + 規模 + チューニング種別 (instruct / reasoning など) |
+| EP / HW ターゲット | `cuda-gpu` | 対応 Execution Provider とハードウェア（`cuda-gpu` / `trtrtx-gpu` / `openvino-gpu` / `qnn-npu` / `generic-cpu` 等） |
+| バージョン | `:5` | このバリアントのカタログ上のリビジョン番号 |
+
+同じ `phi-4-mini` エイリアスでも、マシン環境によって実際にロードされる Model ID が変わります。
+
+| マシン環境 | 解決される Model ID 例 |
+| --- | --- |
+| NVIDIA GPU + CUDA EP | `Phi-4-mini-instruct-cuda-gpu:N` |
+| NVIDIA RTX + TensorRT-RTX EP | `Phi-4-mini-instruct-trtrtx-gpu:N` |
+| Intel/AMD + OpenVINO | `Phi-4-mini-instruct-openvino-gpu:N` |
+| Snapdragon NPU | `Phi-4-mini-instruct-qnn-npu:N` |
+| CPU フォールバック | `Phi-4-mini-instruct-generic-cpu:N` |
+
+使い分け:
+
+- **エイリアス指定**（`foundry model run phi-4-mini`） → Valid EPs と突き合わせて最適バリアントを自動選択。通常はこちらでよい。
+- **Model ID 直指定**（`foundry model run Phi-4-mini-instruct-cuda-gpu:5`） → バリアントを固定したい場合（再現性確保、特定 EP の性能ベンチ等）。
+
 ## 1.1.3 モデル情報の確認
 
 ```powershell
