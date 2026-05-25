@@ -25,22 +25,31 @@ Endpoint: http://localhost:5273
 
 ```powershell
 $ENDPOINT = "http://localhost:5273"   # 自分の出力に置き換える
-$MODEL    = "qwen2.5-0.5b"            # Lab 0 で DL 済み（軽量・即起動）。`phi-4-mini` 等に差し替え可
 ```
-
-> 💡 `phi-4-mini` は GPU 版でも数 GB あり初回 DL に時間がかかります。動作確認だけなら Lab 0 でダウンロード済みの **`qwen2.5-0.5b` を使うのがおすすめ**。応答品質を比べたくなったら `$MODEL = "phi-4-mini"` に切り替えて同じスクリプトを再実行できます。
 
 モデルが起動していなければ、別ターミナルで:
 
 ```powershell
-foundry model run $MODEL
+foundry model run qwen2.5-0.5b      # Lab 0 で DL 済み。品質重視なら phi-4-mini 等に差し替え
 ```
 
-利用可能モデル名（リクエストに渡す `model` の値）:
+起動中モデルの **Model ID**（リクエストに渡す `model` の値）を取得:
 
 ```powershell
-curl "$ENDPOINT/v1/models"
+(Invoke-RestMethod "$ENDPOINT/v1/models").data | Format-Table id, owned_by, maxInputTokens
+
+# /v1/models の先頭をそのまま使うなら：
+$MODEL = (Invoke-RestMethod "$ENDPOINT/v1/models").data[0].id
+"Using model: $MODEL"
 ```
+
+出力例（マシンによって EP 部分が変わる）:
+
+```
+Using model: qwen2.5-0.5b-instruct-trtrtx-gpu:2
+```
+
+> ⚠️ **REST 直叩きでは Model ID が必須**。`foundry` CLI / SDK は `phi-4-mini` のような **エイリアス** を内部で Model ID に解決しますが、`/v1/chat/completions` にエイリアスをそのまま渡すと `400 Bad Request` になります。必ず `/v1/models` で返った `id`（例: `Phi-4-mini-instruct-cuda-gpu:5`）を使ってください。Model ID の読み方は [Lab 1.1 § 1.1.2](lab1-1-cli.md#112-モデルカタログの一覧) 参照。
 
 ## 1.2.2 chat.completions（非ストリーミング）
 
@@ -92,8 +101,9 @@ curl -N -X POST "$ENDPOINT/v1/chat/completions" `
 
 ```http
 @endpoint = http://localhost:5273
-@model = qwen2.5-0.5b
-# 応答品質を上げたい場合は phi-4-mini などに変更（初回 DL あり）
+# /v1/models で確認した Model ID をそのまま貼り付ける（エイリアス不可）。例：
+@model = qwen2.5-0.5b-instruct-trtrtx-gpu:2
+# @model = Phi-4-mini-instruct-cuda-gpu:5
 
 ### List models
 GET {{endpoint}}/v1/models
