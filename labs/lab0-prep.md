@@ -91,7 +91,7 @@ EP autoregistration status: Successfully downloaded and registered the following
 Valid EPs: CPUExecutionProvider, WebGpuExecutionProvider, NvTensorRTRTXExecutionProvider, OpenVINOExecutionProvider, CUDAExecutionProvider
 ```
 
-`Valid EPs:` 行に列挙された実行プロバイダー（CPU / WebGPU / CUDA / OpenVINO / NvTensorRT 等）が、このマシンでモデル推論に使える EP の一覧です（Step 5 で活用します）。
+`Valid EPs:` 行に列挙された実行プロバイダー（CPU / WebGPU / CUDA / OpenVINO / NvTensorRT 等）が、このマシンでモデル推論に使える EP の一覧です（Step 5 で活用）。各 EP の特徴・使い分けは [../docs/execution-providers.md](../docs/execution-providers.md) を参照してください。
 
 確実にリセットしたい場合（ポートを変えたい / プロセスを掃除したい）:
 
