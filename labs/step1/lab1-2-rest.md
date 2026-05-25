@@ -126,11 +126,7 @@ curl -N -s -X POST "$ENDPOINT/v1/chat/completions" `
 Write-Host ""   # 末尾改行
 ```
 
-実行例:
 
-```
-四国は4つの県で構成されています。徳島県、香川県、愛媛県、高知県です。
-```
 
 ## 1.2.4 VS Code REST Client 用ファイル（任意）
 
@@ -153,7 +149,7 @@ Content-Type: application/json
   "model": "{{model}}",
   "messages": [
     {"role": "system", "content": "あなたは簡潔に答える日本語アシスタントです。"},
-    {"role": "user",   "content": "Foundry Local とは何ですか？"}
+    {"role": "user",   "content": "Microsoft Foundry Local とは何ですか？"}
   ],
   "temperature": 0.2,
   "max_tokens": 200

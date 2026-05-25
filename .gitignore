@@ -1,1 +1,11 @@
 spec.md
+
+# VS Code workspace settings
+.vscode/
+
+# Lab 1.2 で生成される一時ペイロード
+body.json
+
+# Lab 作業ディレクトリ
+labs-work/
+
